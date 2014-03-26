@@ -1,0 +1,73 @@
+int buzzer = 9;
+int switch1=13;
+int buzzerPin = 11;
+int dot = 250;
+
+
+
+char* morseLetters[] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..",".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.","...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." };
+char* Letter[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i","j", "k", "l", "m", "n", "o", "p", "q", "r","s", "t", "u", "v", "w", "x", "y", "z" };
+char* numbers[]={"-----",".----","..---","...--","....-",".....","-....","--...","---..","----."};
+char* list[4]={};
+void setup()                
+{
+  pinMode(switch1, INPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()                   
+{
+  if (digitalRead(switch1) == LOW){
+  analogWrite(buzzer,128);
+  }
+  else{
+  analogWrite(buzzer,0);
+  }
+
+  char mist;
+  if (Serial.available() > 0) {
+    mist = Serial.read();
+    if (mist >= 'a' && mist <= 'z') {
+      lettersId(morseLetters[mist - 'a']);
+    }
+    else if(mist >= 'A' && mist <= 'Z') {
+      lettersId(morseLetters[mist - 'A']);
+    }
+    else if(mist >= '0' && mist <= '9') {
+     lettersId(numbers[mist - '0']);
+    }
+    else if(mist == ' ') {
+      delay(dot * 4); 
+    }
+  }
+}
+
+
+void lettersId(char* character) {
+  int i = 0;
+   while(character[i] != '\0') {
+    output(character[i]);
+    i++;
+  }
+  delay(dot * 3);
+}
+
+void output(char ID) {
+   analogWrite(buzzerPin,128);
+  if (ID == '.') {
+    delay(dot);          
+  }
+  else {
+    delay(dot * 3);          
+  
+}
+
+  analogWrite(buzzerPin,0); 
+  delay(dot);
+  
+}
+
+
+
